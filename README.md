@@ -11,7 +11,8 @@ We will be using **Hugging Face's free Inference API** for the AI model and **Gr
 Before we begin, please ensure your local environment is ready so we can jump straight into coding.
 
 1. **Create a Hugging Face Account:** Sign up for free at [huggingface.co](https://huggingface.co/).
-2. **Generate an API Token:** * Go to your Hugging Face Settings > Access Tokens.
+2. **Generate an API Token:**
+   * Go to your Hugging Face Settings > Access Tokens.
    * Create a new token with **Write** or **Fine-grained** permissions. Copy this token; you will need it later.
 3. **Clone this Repository:**
    ```bash
@@ -19,15 +20,16 @@ Before we begin, please ensure your local environment is ready so we can jump st
    cd ai-chatbot-workshop
    ```
 4. **Set Up Your Environment:**
-   Make sure you have Python 3.11+ installed. Then, install the required packages:
+   Make sure you have Python 3.11+ installed. Create a python environment and activate it. Then, install the required packages in your virtual environment:
    ```bash
    pip install -r requirements.txt
    ```
 5. **Create your Secrets File:**
-   Create a new file named `.env` in the root folder of this project and add your token:
+   Create a new file named `.env` in the root folder of this project and add your token. The file should look like:
    ```env
-   HF_TOKEN=<your_hugging_face_token_here>
+   HF_TOKEN=your_hugging_face_token
    ```
+   where `your_hugging_face_token` is the actual value of the token you copied from HuggingFace.
 
 ---
 
@@ -90,8 +92,8 @@ print(response.choices[0].message.content)
 # TODO 5: Create a gr.ChatInterface using your respond function and launch it
 demo = gr.ChatInterface(
     fn=respond,
-    type="messages",
-    title="My Local AI Assistant"
+    title="My Local AI Assistant",
+    description="Powered by Hugging Face and Gradio"
 )
 
 # TODO 6: Launch the app
