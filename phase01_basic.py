@@ -5,7 +5,7 @@ from huggingface_hub import InferenceClient
 load_dotenv()
 
 client = InferenceClient(
-    model="HuggingFaceH4/zephyr-7b-beta:featherless-ai",
+    model="mistralai/Mistral-7B-Instruct-v0.2:featherless-ai",
     api_key=os.getenv("HF_TOKEN")
 )
 
