@@ -97,25 +97,40 @@ demo = gr.ChatInterface(
 )
 
 # TODO 6: Launch the app
-    demo.launch()
+demo.launch()
 ```
 **Run it:** `python student/phase02_ui.py` (Then click the `http://127.0.0.1:7860` link in your terminal!)
 
 ---
 
-### Phase 3: Concurrent Chats (Traffic Control)
-**File:** `student/phase03_concurrency.py`
-**Goal:** Learn how to manage heavy user traffic by enabling queues, preventing your app from crashing if too many people use it at once.
+### Phase 3: RAG Pipeline
+**File:** `student/phase03_rag.py`
+**Goal:** Learn how to implement a local Retrieval Augmented Generation (RAG) pipeline using LangChain.
 
 **Code to fill in:**
 ```python
-# TODO 1: Enable the queue system so the app doesn't crash under heavy traffic.
-demo.queue(
-    default_concurrency_limit=1,
-    max_size=1
+# TODO 1: Chunk the documents
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+chunks = text_splitter.split_documents(documents)
+
+# TODO 2: Initialize the Vector Database
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+vector_store = FAISS.from_documents(chunks, embeddings)
+
+
+# TODO 3: Retrieve the relevant documents
+relevant_docs = vector_store.similarity_search(user_text, k=3)
+context = "\n".join([doc.page_content for doc in relevant_docs])
+
+# TODO 4: Create the final System Prompt
+full_system_prompt = (
+    f"{system_prompt}\n\n"
+    "Use ONLY the following context to answer the user's question. "
+    "If the answer is not in the context, politely say you do not know.\n\n"
+    f"CONTEXT:\n{context}"
 )
 ```
-**Run it:** `python student/phase03_concurrency.py`
+**Run it:** `python student/phase03_rag.py`
 
 ---
 
@@ -133,13 +148,16 @@ demo.queue(
 6. **Upload your code:**
    * Go to the **Files** tab in your Space.
    * Click **Add file > Upload files**.
-   * Upload `requirements.txt` and `phase02_ui.py` from your local folder.
-   * *Important:* Rename `phase02_ui.py` to `app.py` in the browser interface.
-   * Commit the changes! Wait 1-2 minutes for the app to Build, and share your link!
+   * Upload `requirements.txt`, `phase03_rag.py`, and `README_hf.md` from your local folder.
+     + *Important:* Rename `phase03_rag.py` to `app.py` in the browser interface.
+     + *Important:* Rename `README_hf.md` to `README.md` in the browser interface.
+   * Commit the changes! Wait 10-15 minutes for the app to Build, and share your link!
 
 
 ## Extra
-We can use a very sophisticated system prompt as well to make the chatbot more robust. One example is:
+We can use a very sophisticated system prompt as well to make the chatbot more robust.
+
+For instance, in the `phase02_ui.py`, we can use the following system prompt:
 ```python
 SYSTEM_PROMPT ="""You are a helpful, concise, and friendly AI assistant.
 
@@ -162,3 +180,19 @@ Behavior:
 - Stay on topic and avoid unnecessary tangents.
 """
 ```
+
+Similarly for `phase03_rag.py`, we can use something like this:
+```python
+SYSTEM_PROMPT = """You are a professional, accurate, and helpful enterprise AI assistant.
+
+Your primary objective is to answer the user's questions based EXCLUSIVELY on the provided CONTEXT.
+
+CRITICAL INSTRUCTIONS:
+1. Grounding: You must rely STRICTLY on the retrieved CONTEXT to formulate your answer. Do not use outside knowledge.
+2. Missing Information: If the CONTEXT does not contain the exact answer to the user's query, you must state: "I'm sorry, but I don't have that information in my current documents." Do NOT guess, infer, or hallucinate details.
+3. Tone: Maintain a polite, objective, and concise tone.
+4. Formatting: Use bullet points for lists and keep paragraphs short for readability.
+5. Casual Chat: If the user says hello or asks a casual greeting, respond politely and ask how you can help them with their documents today.
+"""
+```
+
