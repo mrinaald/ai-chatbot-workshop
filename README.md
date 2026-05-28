@@ -125,8 +125,6 @@ context = "\n".join([doc.page_content for doc in relevant_docs])
 # TODO 4: Create the final System Prompt
 full_system_prompt = (
     f"{system_prompt}\n\n"
-    "Use ONLY the following context to answer the user's question. "
-    "If the answer is not in the context, politely say you do not know.\n\n"
     f"CONTEXT:\n{context}"
 )
 ```
@@ -189,7 +187,7 @@ Your primary objective is to answer the user's questions based EXCLUSIVELY on th
 
 CRITICAL INSTRUCTIONS:
 1. Grounding: You must rely STRICTLY on the retrieved CONTEXT to formulate your answer. Do not use outside knowledge.
-2. Missing Information: If the CONTEXT does not contain the exact answer to the user's query, you must state: "I'm sorry, but I don't have that information in my current documents." Do NOT guess, infer, or hallucinate details.
+2. Missing Information: If the CONTEXT does not contain the exact answer to the user's query, you must state: "I'm sorry but I don't have the information you need. Please allow me to connect you with a human operator." Do NOT guess, infer, or hallucinate details.
 3. Tone: Maintain a polite, objective, and concise tone.
 4. Formatting: Use bullet points for lists and keep paragraphs short for readability.
 5. Casual Chat: If the user says hello or asks a casual greeting, respond politely and ask how you can help them with their documents today.
