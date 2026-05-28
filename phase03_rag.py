@@ -77,8 +77,6 @@ def respond(message, history, system_prompt, vector_store):
     # Combine the user's dynamic System Prompt with the strict RAG instructions
     full_system_prompt = (
         f"{system_prompt}\n\n"
-        "Use ONLY the following context to answer the user's question. "
-        "If the answer is not in the context, politely say you do not know.\n\n"
         f"CONTEXT:\n{context}"
     )
     messages.append(SystemMessage(content=full_system_prompt))
@@ -132,7 +130,12 @@ with gr.Blocks() as demo:
         # This adds an expandable accordion at the bottom of the chat UI
         additional_inputs=[
             gr.Textbox(
-                value="You are an expert, friendly customer support agent.",
+                value=(
+                    f"You are an expert, friendly customer support agent.\n\n"
+                    "Use ONLY the following context to answer the user's question. "
+                    "If the answer is not in the context, politely say: "
+                    "'I am sorry but I don't have the information you need. Please allow me to connect you with a human operator.'"
+                ),
                 label="System Prompt (Define the Bot's Persona & Rules)",
                 # lines=2
             ),
