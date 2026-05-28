@@ -20,7 +20,7 @@ Before we begin, please ensure your local environment is ready so we can jump st
    cd ai-chatbot-workshop
    ```
 4. **Set Up Your Environment:**
-   Make sure you have Python 3.11+ installed. Create a python environment and activate it. Then, install the required packages in your virtual environment:
+   Make sure you have Python 3.12+ installed. Create a python environment and activate it. Then, install the required packages in your virtual environment:
    ```bash
    pip install -r requirements.txt
    ```
